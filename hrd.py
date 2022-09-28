@@ -103,6 +103,10 @@ class Puzzle:
             s += '\n'
         return s.rstrip()
 
+    def heuristic_value(self) -> int:
+        """Calculate the heuristic value using Manhattan distance."""
+        pass
+
     def is_solved(self) -> bool:
         """
         Return True if this puzzle is solved. Otherwise, return False.
@@ -190,7 +194,7 @@ class Puzzle:
             new_set = {(y - 1, x), (y - 1, x + 1)}
             if new_set.issubset(empties):
                 puzzle = self.copy_puzzle()
-                puzzle.parent = self
+                # puzzle.parent = self
                 # update cao_cao
                 puzzle._grid[0][0] = (y - 1, x, cao_cao[2])
                 # update two empty cells
@@ -200,7 +204,7 @@ class Puzzle:
             new_set = {(y + 2, x), (y + 2, x + 1)}
             if new_set.issubset(empties):
                 puzzle = self.copy_puzzle()
-                puzzle.parent = self
+                # puzzle.parent = self
                 # update cao_cao
                 puzzle._grid[0][0] = (y + 1, x, cao_cao[2])
                 # update two empty cells
@@ -210,7 +214,7 @@ class Puzzle:
             new_set = {(y, x + 2), (y + 1, x + 2)}
             if new_set.issubset(empties):
                 puzzle = self.copy_puzzle()
-                puzzle.parent = self
+                # puzzle.parent = self
                 # update cao_cao
                 puzzle._grid[0][0] = (y, x + 1, cao_cao[2])
                 # update two empty cells
@@ -220,7 +224,7 @@ class Puzzle:
             new_set = {(y, x - 1), (y + 1, x - 1)}
             if new_set.issubset(empties):
                 puzzle = self.copy_puzzle()
-                puzzle.parent = self
+                # puzzle.parent = self
                 # update cao_cao
                 puzzle._grid[0][0] = (y, x - 1, cao_cao[2])
                 # update two empty cells
@@ -287,7 +291,7 @@ class Puzzle:
                 new_set = {(y - 1, x)}
                 if new_set.issubset(empties):
                     puzzle = self.copy_puzzle()
-                    puzzle.parent = self
+                    # puzzle.parent = self
                     # update this vertical tile
                     puzzle._grid[1][i] = (y - 1, x, name)
                     # update the according empty tile
@@ -302,7 +306,7 @@ class Puzzle:
                 new_set = {(y + 2, x)}
                 if new_set.issubset(empties):
                     puzzle = self.copy_puzzle()
-                    puzzle.parent = self
+                    # puzzle.parent = self
                     # update this vertical tile
                     puzzle._grid[1][i] = (y + 1, x, name)
                     # update the according empty tile
@@ -317,7 +321,7 @@ class Puzzle:
                 new_set = {(y, x + 1), (y + 1, x + 1)}
                 if new_set.issubset(empties):
                     puzzle = self.copy_puzzle()
-                    puzzle.parent = self
+                    # puzzle.parent = self
                     # update this vertical tile
                     puzzle._grid[1][i] = (y, x + 1, name)
                     # update the according empty tile
@@ -327,7 +331,7 @@ class Puzzle:
                 new_set = {(y, x - 1), (y + 1, x - 1)}
                 if new_set.issubset(empties):
                     puzzle = self.copy_puzzle()
-                    puzzle.parent = self
+                    # puzzle.parent = self
                     # update this vertical tile
                     puzzle._grid[1][i] = (y, x - 1, name)
                     # update the according empty tile
@@ -352,7 +356,7 @@ class Puzzle:
                 new_set = {(y - 1, x), (y - 1, x + 1)}
                 if new_set.issubset(empties):
                     puzzle = self.copy_puzzle()
-                    puzzle.parent = self
+                    # puzzle.parent = self
                     # update this horizontal tile
                     puzzle._grid[2][i] = (y - 1, x, name)
                     # update the according empty tile
@@ -362,7 +366,7 @@ class Puzzle:
                 new_set = {(y + 1, x), (y + 1, x + 1)}
                 if new_set.issubset(empties):
                     puzzle = self.copy_puzzle()
-                    puzzle.parent = self
+                    # puzzle.parent = self
                     # update this horizontal tile
                     puzzle._grid[2][i] = (y + 1, x, name)
                     # update the according empty tile
@@ -372,7 +376,7 @@ class Puzzle:
                 new_set = {(y, x + 2)}
                 if new_set.issubset(empties):
                     puzzle = self.copy_puzzle()
-                    puzzle.parent = self
+                    # puzzle.parent = self
                     # update this horizontal tile
                     puzzle._grid[2][i] = (y, x + 1, name)
                     # update the according empty tile
@@ -387,7 +391,7 @@ class Puzzle:
                 new_set = {(y, x - 1)}
                 if new_set.issubset(empties):
                     puzzle = self.copy_puzzle()
-                    puzzle.parent = self
+                    # puzzle.parent = self
                     # update this horizontal tile
                     puzzle._grid[2][i] = (y, x - 1, name)
                     # update the according empty tile
@@ -415,7 +419,7 @@ class Puzzle:
             if self._not_hit_boundary(y, x, 'N'):
                 if (y - 1, x) in empties:
                     puzzle = self.copy_puzzle()
-                    puzzle.parent = self
+                    # puzzle.parent = self
                     # update this 1x1 tile
                     puzzle._grid[3][i] = (y - 1, x, name)
                     # update the according empty tile
@@ -429,7 +433,7 @@ class Puzzle:
             if self._not_hit_boundary(y, x, 'S'):
                 if (y + 1, x) in empties:
                     puzzle = self.copy_puzzle()
-                    puzzle.parent = self
+                    # puzzle.parent = self
                     # update this 1x1 tile
                     puzzle._grid[3][i] = (y + 1, x, name)
                     # update the according empty tile
@@ -443,7 +447,7 @@ class Puzzle:
             if self._not_hit_boundary(y, x, 'E'):
                 if (y, x + 1) in empties:
                     puzzle = self.copy_puzzle()
-                    puzzle.parent = self
+                    # puzzle.parent = self
                     # update this 1x1 tile
                     puzzle._grid[3][i] = (y, x + 1, name)
                     # update the according empty tile
@@ -457,7 +461,7 @@ class Puzzle:
             if self._not_hit_boundary(y, x, 'W'):
                 if (y, x - 1) in empties:
                     puzzle = self.copy_puzzle()
-                    puzzle.parent = self
+                    # puzzle.parent = self
                     # update this 1x1 tile
                     puzzle._grid[3][i] = (y, x - 1, name)
                     # update the according empty tile
@@ -501,7 +505,6 @@ class Puzzle:
         while parent is not None:
             path.append(parent)
             parent = parent.parent
-        path.reverse()
         return path
 
 
@@ -540,16 +543,19 @@ class DfsSolver(Solver):
     """
 
     def solve(self, puzzle: Puzzle) -> List[Puzzle]:
-        frontier = deque([puzzle])
+        frontier = [puzzle]
         seen = set()
         while len(frontier) > 0:
-            state = frontier.pop()
-            if state not in seen:
+            state = frontier.pop(-1)
+            if str(state) not in seen:
                 seen.add(str(state))
                 if state.is_solved():
                     return state.get_path()
                 for successor in state.extensions():
+                    successor.parent = state
                     frontier.append(successor)
+                # print(f'Size of explored set: {len(seen)}')
+                # print(f'Size of frontier: {len(frontier)}')
         return [puzzle]
 
 
@@ -596,12 +602,19 @@ if __name__ == "__main__":
     input_f = open(argv[1], 'r')
     input_puzzle = from_input_to_puzzle(input_f)
     dfs_output = open(argv[2], 'w')
-    # astar_output = open(argv[3], 'w')
 
     sys.stdout = dfs_output
     dfs_solution = DfsSolver().solve(input_puzzle)
-    for item in dfs_solution:
-        print(item)
+    print(f'Cost of the solution: {len(dfs_solution)}')
+    for i in range(len(dfs_solution) - 1, -1, -1):
+        print(dfs_solution[i])
+        print()
+
+    # for p in input_puzzle.extensions():
+    #     print(p)
+    #     print(p.is_solved())
+
+        # astar_output = open(argv[3], 'w')
 
 # names = ["a", "b", "c"]
 # ages = [12, 20, 22]
