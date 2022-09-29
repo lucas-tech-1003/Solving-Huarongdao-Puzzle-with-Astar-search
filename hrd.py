@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import sys
-from collections import deque
 from sys import argv
-from typing import List, Optional, Set, Tuple
+from typing import List, Optional, Tuple
+import heapq
 
 
 class Puzzle:
@@ -28,12 +28,14 @@ class Puzzle:
     _cols: int
     _grid: List[List[Tuple[int, int, str]]]
     parent: Puzzle
+    cost: int
 
     def __init__(self, rows: int, columns: int,
                  grid: List[List[Tuple[int, int, str]]],
                  parent: Optional[Puzzle] = None) -> None:
         self._rows, self._cols, self._grid = rows, columns, grid
         self.parent = parent
+        self.cost = 0
 
     def _convert_puzzle_to_list(self) -> List[List[str]]:
         """
@@ -47,7 +49,8 @@ class Puzzle:
 
         >>> puzzle = Puzzle(5, 4, [r1, r2, r3, r4, r5])
         >>> puzzle._convert_puzzle_to_list()
-        [['3', '1', '1', '3'], ['3', '1', '1', '3'], ['3', '2', '2', '3'], ['3', '4', '4', '3'], ['4', '0', '0', '4']]
+        [['3', '1', '1', '3'], ['3', '1', '1', '3'], ['3', '2', '2', '3'], \
+        ['3','4', '4', '3'], ['4', '0', '0', '4']]
         """
         lst = [["", "", "", ""],
                ["", "", "", ""],
@@ -104,8 +107,18 @@ class Puzzle:
         return s.rstrip()
 
     def heuristic_value(self) -> int:
-        """Calculate the heuristic value using Manhattan distance."""
-        pass
+        """Calculate the heuristic value using Manhattan distance.
+        """
+        cao_cao = self._grid[0][0]
+        y, x = cao_cao[0], cao_cao[1]
+
+        return self.cost + (abs(y - 3) + abs(x - 1))
+
+    def __lt__(self, other: Puzzle) -> bool:
+        """
+        return True if self.heuristic_value is less than other.heuristic_value
+        """
+        return self.heuristic_value() < other.heuristic_value()
 
     def is_solved(self) -> bool:
         """
@@ -531,9 +544,23 @@ class AStarSolver(Solver):
     A solver for solving the huarongdao puzzle using the A* search technique.
     """
 
-    def solve(self, puzzle: Puzzle, seen: Optional[Set[str]] = None) -> List[
-        Puzzle]:
-        pass
+    def solve(self, puzzle: Puzzle) -> List[Puzzle]:
+        frontier = [puzzle]
+        heapq.heapify(frontier)
+        seen = set()
+        while len(frontier) > 0:
+            state = heapq.heappop(frontier)
+            if str(state) not in seen:
+                seen.add(str(state))
+                if state.is_solved():
+                    return state.get_path()
+                for successor in state.extensions():
+                    successor.parent = state
+                    successor.cost += state.cost + 1
+                    heapq.heappush(frontier, successor)
+                # print(f'Size of explored set: {len(seen)}')
+                # print(f'Size of frontier: {len(frontier)}')
+        return [puzzle]
 
 
 class DfsSolver(Solver):
@@ -610,21 +637,11 @@ if __name__ == "__main__":
         print(dfs_solution[i])
         print()
 
-    # for p in input_puzzle.extensions():
-    #     print(p)
-    #     print(p.is_solved())
+    astar_output = open(argv[3], 'w')
 
-        # astar_output = open(argv[3], 'w')
-
-# names = ["a", "b", "c"]
-# ages = [12, 20, 22]
-# age = 18
-# older = []
-# younger = []
-# for i in range(len(names)):
-#     if ages[i] < age:
-#         younger.append(names[i])
-#     elif ages[i] > age:
-#         older.append(names[i])
-# print(older)
-# print(younger)
+    sys.stdout = astar_output
+    astar_solution = AStarSolver().solve(input_puzzle)
+    print(f'Cost of the solution: {astar_solution[0].heuristic_value()}')
+    for i in range(len(astar_solution) - 1, -1, -1):
+        print(astar_solution[i])
+        print()
