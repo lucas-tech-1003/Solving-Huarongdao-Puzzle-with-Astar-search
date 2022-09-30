@@ -112,13 +112,26 @@ class Puzzle:
         cao_cao = self._grid[0][0]
         y, x = cao_cao[0], cao_cao[1]
 
-        return self.cost + (abs(y - 3) + abs(x - 1))
+        return self.cost + abs(y - 3) + abs(x - 1)
+
+    def advanced_heuristic(self) -> int:
+        """Advanced heuristic.
+        """
+        cao_cao = self._grid[0][0]
+        y, x = cao_cao[0], cao_cao[1]
+        manhattan = abs(y - 3) + abs(x - 1)
+        if manhattan == 1:
+            return self.cost + manhattan
+
+        return self.cost + 2 * manhattan
 
     def __lt__(self, other: Puzzle) -> bool:
         """
         return True if self.heuristic_value is less than other.heuristic_value
         """
+
         return self.heuristic_value() < other.heuristic_value()
+        # return self.advanced_heuristic() < other.advanced_heuristic()
 
     def is_solved(self) -> bool:
         """
@@ -548,13 +561,16 @@ class AStarSolver(Solver):
         frontier = [puzzle]
         heapq.heapify(frontier)
         seen = set()
+        frontier_len = 1
         while len(frontier) > 0:
             state = heapq.heappop(frontier)
             if str(state) not in seen:
                 seen.add(str(state))
                 if state.is_solved():
+                    # print(f'Number of states expanded: {frontier_len}')
                     return state.get_path()
                 for successor in state.extensions():
+                    frontier_len += len(state.extensions())
                     successor.parent = state
                     successor.cost += state.cost + 1
                     heapq.heappush(frontier, successor)
