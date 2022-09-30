@@ -1,3 +1,9 @@
+"""
+Note to the TA: To run A* with the advanced heuristic, goto the method
+__lt__() in Puzzle class and comment the original return statement while
+uncommenting the return statement below.
+"""
+
 from __future__ import annotations
 
 import sys
